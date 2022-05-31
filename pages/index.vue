@@ -1,59 +1,52 @@
 <template>
-  <button @click="authenticate()">
+  <button class="m-10" @click="authenticate()">
     click me
   </button>
 </template>
 
 <script>
 // import PING from '~/graphql/ping.js'
-import Moralis from 'moralis'
 import CHALLENGE from '~/graphql/challenge.js'
-// import AUTHENTICATION from '~/graphql/authenticate.js'
+import Signer from '~/utilities/Signer'
+import AUTHENTICATION from '~/graphql/authenticate.js'
 
 export default {
   data () {
     return {
-      user: null // Amelyik változóra this-el hivatkozunk az mind itt található a data-ban
     }
   },
-  async beforeMount () {
-    try {
-      this.user = await Moralis.authenticate({
-        signingMessage: 'Log in using Moralis'
-      })
-      if (this.user) {
-        console.log(this.user.get('ethAddress'))
-      }
-    } catch (e) {
-      console.log(e)
+  computed: {
+    address () {
+      return this.$store.state.connectedAddress
     }
   },
-
   methods: {
     async authenticate () {
-      const response = await this.$apollo.query({
+      const challengeResponse = await this.$apollo.query({
         query: CHALLENGE,
         variables: {
           request: {
           // Metamask account az address data-ja
-            address: this.user.get('ethAddress')
+            address: this.address
           }
         }
       })
+      console.log('Lens challenge data: ', challengeResponse)
 
-      console.log(window.ethersProvider.signMessage(response.data.challenge.text))
-      // const signature = await this.$apollo.query({
-      //   mutation: AUTHENTICATION,
-      //   variables: {
-      //     request: {
-      //       address: this.user.get('ethAddress'),
-      //       signature: response.data.challenge.text
-      //     }
-      //   }
-      // })
+      const signature = await Signer.instance().sign(challengeResponse.data.challenge.text)
 
-      console.log('Lens example data: ', response)
-      // console.log('Signature is: ', signature)
+      console.log('Lens signature data: ', signature)
+
+      const authenticateResponse = await this.$apollo.mutate({
+        mutation: AUTHENTICATION,
+        variables: {
+          request: {
+            address: this.address,
+            signature
+          }
+        }
+      })
+      console.log('Lens authenticate data: ', authenticateResponse)
     }
   }
 
