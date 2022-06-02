@@ -1,18 +1,24 @@
 <template>
-  <button class="m-10" @click="authenticate()">
-    click me
-  </button>
+  <div>
+    <button style="border:solid" @click="authenticate()">
+      Lens Authentication
+    </button>
+    <button style="border:solid" @click="createProfile()">
+      Lens - Create Profile
+    </button>
+  </div>
 </template>
 
 <script>
-// import PING from '~/graphql/ping.js'
 import CHALLENGE from '~/graphql/challenge.js'
 import Signer from '~/utilities/Signer'
 import AUTHENTICATION from '~/graphql/authenticate.js'
+import CREATE_PROFILE from '~/graphql/create-profile.js'
 
 export default {
   data () {
     return {
+      accessToken: null
     }
   },
   computed: {
@@ -47,8 +53,28 @@ export default {
         }
       })
       console.log('Lens authenticate data: ', authenticateResponse)
+      this.accessToken = authenticateResponse.data.authenticate.accessToken
+    },
+    async createProfile () {
+      const request = {
+        handle: 'rikibartaaa'
+        // profilePictureUri: null,
+        // followNFTURI: null,
+        // followModule: null
+      }
+      // validáció 5 tól 31-ig karakter, csak kisbetű és szám
+      console.log(this.accessToken)
+      const createProfileResponse = await this.$apollo.mutate({
+        mutation: CREATE_PROFILE,
+        variable: {
+          request
+        },
+        headers: {
+          authorization: `Bearer ${this.accessToken}`
+        }
+      })
+      console.log('Create Profile transaction is', createProfileResponse)
     }
   }
-
 }
 </script>
