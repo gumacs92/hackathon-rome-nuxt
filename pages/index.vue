@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import Cookies from 'js-cookie'
 import CHALLENGE from '~/graphql/challenge.js'
 import Signer from '~/utilities/Signer'
 import AUTHENTICATION from '~/graphql/authenticate.js'
@@ -54,23 +55,22 @@ export default {
       })
       console.log('Lens authenticate data: ', authenticateResponse)
       this.accessToken = authenticateResponse.data.authenticate.accessToken
+      Cookies.set('access_token', this.accessToken)
     },
     async createProfile () {
+      // validáció 5 tól 31-ig karakter, csak kisbetű és szám
+      console.log(this.accessToken)
+      // this.$apollo.headers.authorization = `Bearer ${this.accessToken}`
       const request = {
         handle: 'rikibartaaa'
         // profilePictureUri: null,
         // followNFTURI: null,
         // followModule: null
       }
-      // validáció 5 tól 31-ig karakter, csak kisbetű és szám
-      console.log(this.accessToken)
       const createProfileResponse = await this.$apollo.mutate({
         mutation: CREATE_PROFILE,
-        variable: {
+        variables: {
           request
-        },
-        headers: {
-          authorization: `Bearer ${this.accessToken}`
         }
       })
       console.log('Create Profile transaction is', createProfileResponse)
