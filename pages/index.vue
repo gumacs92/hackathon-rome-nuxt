@@ -18,9 +18,6 @@
     <button style="border:solid" @click="createPost()">
       Lens - Create Post
     </button>
-    <button style="border:solid" @click="uploadToIpfs()">
-      Moralis - UploadtoIPFS
-    </button>
     <button style="border:solid" @click="getPublications()">
       Lens - Get Publications
     </button>
@@ -30,6 +27,11 @@
     <button style="border:solid" @click="follow()">
       Lens - Follow
     </button>
+    <button style="border:solid" @click="getPublication()">
+      Lens - Get Publication
+    </button>
+    <input id="ProfileHandle" type="text" placeholder="Pick handle for Creating Profile" style="border:solid">
+    <input id="MoralisPost" v-model="form.description" type="text" placeholder="Moralis Post description" style="border:solid">
   </div>
 </template>
 
@@ -47,11 +49,16 @@ import createIPFS from '~/utilities/ipfs.js'
 import GET_PUBLICATIONS from '~/graphql/get-publications.js'
 import CREATE_COMMENT_TYPED_DATA from '~/graphql/create-comment-typed-data.js'
 import CREATE_FOLLOW_TYPED_DATA from '~/graphql/create-follow-typed-data.js'
+import GET_PUBLICATION from '~/graphql/get-publication.js'
+import LensHubFactory from '~/utilities/lens-hub.js'
 
 export default {
   data () {
     return {
-      accessToken: null
+      accessToken: null,
+      form: {
+        description: ''
+      }
     }
   },
   computed: {
@@ -61,6 +68,7 @@ export default {
   },
   methods: {
     async authenticate () {
+      console.log(this.address)
       const challengeResponse = await this.$apollo.query({
         query: CHALLENGE,
         variables: {
@@ -70,11 +78,11 @@ export default {
           }
         }
       })
-      console.log('Lens challenge data: ', challengeResponse)
+      // console.log('Lens challenge data: ', challengeResponse)
 
       const signature = await Signer.instance().sign(challengeResponse.data.challenge.text)
 
-      console.log('Lens signature data: ', signature)
+      // console.log('Lens signature data: ', signature)
 
       const authenticateResponse = await this.$apollo.mutate({
         mutation: AUTHENTICATION,
@@ -85,7 +93,7 @@ export default {
           }
         }
       })
-      console.log('Lens authenticate data: ', authenticateResponse)
+      // console.log('Lens authenticate data: ', authenticateResponse)
       this.accessToken = authenticateResponse.data.authenticate.accessToken
       Cookies.set('access_token', this.accessToken)
     },
@@ -94,7 +102,7 @@ export default {
       console.log(this.accessToken)
       // this.$apollo.headers.authorization = `Bearer ${this.accessToken}`
       const request = {
-        handle: 'follower'
+        handle: document.getElementById('ProfileHandle').value // Ide kellene majd egy input create Profilhoz
         // profilePictureUri: null,
         // followNFTURI: null,
         // followModule: null
@@ -123,7 +131,7 @@ export default {
         mutation: CREATE_SET_DEFAULT_PROFILE_TYPED_DATA,
         variables: {
           request: {
-            profileId: '0x03fd'
+            profileId: '0x03c9'
           }
         }
       })
@@ -135,7 +143,7 @@ export default {
         variables: {
           request: {
             ownedBy: [this.address],
-            limit: 1
+            limit: 10
           }
         }
       })
@@ -143,9 +151,23 @@ export default {
       console.log('Your Profile Id is: ', getProfiles.data.profiles.items[0].id)
     },
     async createPost () {
+      const contentURI = await createIPFS(this.form.description)
+      const getProfiles = await this.$apollo.query({
+        query: GET_PROFILES,
+        variables: {
+          request: {
+            ownedBy: [this.address],
+            limit: 10
+          }
+        }
+      })
+      const myProfile = getProfiles.data.profiles.items[0].id
+      // console.log("the Profile Id you wanna post with is", myProfile)
+
       const createPostRequest = {
-        profileId: '0x03fd',
-        contentURI: 'https://ipfs.moralis.io:2053/ipfs/QmYs85PXvnMs1vpF4rXAj9TYFuvkXrFwyEETgzzPNjNPQP',
+        profileId: myProfile,
+        // profileId: '0x03c9',
+        contentURI,
         collectModule: {
           freeCollectModule: {
             followerOnly: true
@@ -162,17 +184,50 @@ export default {
         }
       })
       console.log('Lens Post Response is:', createPostResponse)
+
+      const typedData = createPostResponse.data.createPostTypedData.typedData
+      // console.log(typedData)
+      const signature = await Signer.instance().signedTypeData(typedData.domain, typedData.types, Object.assign(typedData.value, { contentURI }))
+      // console.log(signature)
+      const { v, r, s } = Signer.instance().splitSignature(signature)
+
+      console.log(v, r, s)
+
+      const tx = await LensHubFactory(this.$config).postWithSig({
+        profileId: typedData.value.profileId,
+        contentURI: typedData.value.contentURI,
+        collectModule: typedData.value.collectModule,
+        collectModuleInitData: typedData.value.collectModuleInitData,
+        referenceModule: typedData.value.referenceModule,
+        referenceModuleInitData: typedData.value.referenceModuleInitData,
+        sig: {
+          v,
+          r,
+          s,
+          deadline: typedData.value.deadline
+        }
+      })
+      console.log(tx.hash)
     },
-    async uploadToIpfs () {
-      await createIPFS()
-    },
+
     async getPublications () {
+      const getProfiles = await this.$apollo.query({
+        query: GET_PROFILES,
+        variables: {
+          request: {
+            ownedBy: [this.address],
+            limit: 10
+          }
+        }
+      })
+      const myProfile = getProfiles.data.profiles.items[0].id
+      console.log('my Profile Id is: ', myProfile)
       const getPublicationsResponse = await this.$apollo.query({
         query: GET_PUBLICATIONS,
         variables: {
           request: {
-            profileId: '0x03fd',
-            publicationTypes: ['POST'],
+            profileId: myProfile,
+            publicationTypes: ['POST', 'COMMENT', 'MIRROR'],
             limit: 10
           }
         }
@@ -185,7 +240,7 @@ export default {
         mutation: CREATE_COMMENT_TYPED_DATA,
         variables: {
           request: {
-            profileId: '0x03fd',
+            profileId: '0x03c9',
             publicationId: '07b7546e-ad23-4d72-8341-53199227c0de',
             contentURI: 'https://ipfs.moralis.io:2053/ipfs/QmYs85PXvnMs1vpF4rXAj9TYFuvkXrFwyEETgzzPNjNPQP',
             collectModule: {
@@ -205,7 +260,7 @@ export default {
       // Itt csinálni kell egy másik profilt amihez új profile Id lesz rendelve hogy tudjunk followolni
       const followRequest = [
         {
-          profile: '0x03fd'
+          profile: '0x03c9'
         },
         {
           profile: '0x03fd',
@@ -222,6 +277,18 @@ export default {
         }
       })
       console.log('Follow Lens Response is: ', followResponse)
+    },
+
+    async getPublication () {
+      const getPublicationResponse = await this.$apollo.query({
+        query: GET_PUBLICATION,
+        variables: {
+          request: {
+            publicationId: 'a38e25aa-45b4-4c51-beac-05e946b5debe'
+          }
+        }
+      })
+      console.log('get Publication Response is', getPublicationResponse)
     }
 
   }

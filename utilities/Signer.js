@@ -1,16 +1,36 @@
 
 // singleton class Signer
 import Moralis from 'moralis'
+import { utils } from 'ethers'
+import omitDeep from 'omit-deep'
 
 const Signer = (function () {
   function SignerConstructor () {
+    const ethers = Moralis.web3Library
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const signer = provider.getSigner(this.address)
     return {
       /// ////////////////////////////////////////////////////////////////////////////////////
+      getSigner () {
+        return signer
+      },
       async sign (textToSign) {
-        const ethers = Moralis.web3Library
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
-        const signer = provider.getSigner(this.address)
         return await signer.signMessage(textToSign)
+      },
+      async signedTypeData  (domain, types, value) {
+        // remove the __typedname from the signature!
+        console.log(omitDeep(domain, '__typename'))
+        console.log(omitDeep(types, '__typename'))
+        console.log(omitDeep(value, '__typename'))
+        return await signer._signTypedData(
+          omitDeep(domain, '__typename'),
+          omitDeep(types, '__typename'),
+          omitDeep(value, '__typename')
+        )
+      },
+
+      splitSignature  (signature) {
+        return utils.splitSignature(signature)
       }
       /// ////////////////////////////////////////////////////////////////////////////////////
     }

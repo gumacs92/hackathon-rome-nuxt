@@ -57,5 +57,6 @@ export default {
   publicRuntimeConfig: {
     moralisAppId: process.env.MORALIS_APP_ID || '',
     moralisServerUrl: process.env.MORALIS_SERVER_URL || '',
+    lensHubContractAddress: process.env.LENS_HUB_CONTRACT_ADDRESS || '',
   }
 }
