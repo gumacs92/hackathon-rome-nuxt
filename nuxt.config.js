@@ -19,6 +19,7 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
+    '@/assets/tailwind.css',  
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -35,7 +36,8 @@ export default {
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/tailwindcss
-    '@nuxtjs/tailwindcss'
+    '@nuxtjs/tailwindcss',
+    '@nuxt/postcss8',
   ],
 
   eslint: {
@@ -53,6 +55,13 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    postCss: { 
+      plugins: [
+        // require('postcss-import'),
+        require('tailwindcss'),
+        require('autoprefixer'),
+      ]
+    },
   },
   publicRuntimeConfig: {
     moralisAppId: process.env.MORALIS_APP_ID || '',

@@ -1,16 +1,18 @@
 <template>
   <section>
-    <div class="cursor-pointer">
+    <div class="bg-primary text-black fixed z-30 bottom-4 rounded-md translate-x-1/2 block py-2 px-4 w-1/2 opacity-80 transition-opacity">
       <div v-if="!address" @click="showConnectWalletModal = true">
         Connect to with Metamask
       </div>
       <!-- TODO show only first and last 4 characters= 0x04...abcd-->
       <div v-else class="" @click="logOut()">
-        {{ address }}
+        Logged in as: {{ address }}
       </div>
     </div>
+    <div class="cursor-pointer" />
     <!-- The actual page will be inserted here -->
-    <div class="2xl:mx-40 qhd:mx-96 mt-10">
+    <div>
+      <Navbar />
       <Nuxt />
     </div>
 
@@ -43,10 +45,12 @@
 <script>
 import Moralis from 'moralis'
 import Modal from '~/components/Modal.vue'
+import Navbar from '~/components/navbar.vue'
 
 export default {
   components: {
-    Modal
+    Modal,
+    Navbar
   },
   data () {
     return {

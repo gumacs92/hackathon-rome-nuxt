@@ -8,8 +8,16 @@ module.exports = {
     variants: {},
     theme: {
         extend: {
+            backgroundImage: theme => ({
+                'index': "url('/img/index.jpg')",
+                'base': "url('/img/base.jpg')",
+                'glass': "url('/img/glass-r.png')",
+                'navbar-gradient': "url('/img/navbar-gradient.svg')",
+               }),
             colors: {
-                cyber: {
+                glassy:'#19191ae8',
+                primary:'#0EFB0E',
+                cyber: { 
                     100: "#119195",
                     200: "#0b979b",
                     300: "#119195",
@@ -99,7 +107,13 @@ module.exports = {
                 exo: ['"Exo 2"'],
                 lex: ['"Lexend"'],
                 bal: ['"Baloo 2"'],
+                'body': ['Oxygen', 'sans-serif'],
+                'primary-light': ['Oxygen-light', 'sans-serif'],
+                'primary-bold': ['Oxygen-bold', 'sans-serif'],
             },
+            boxShadow: {
+                'box': 'inset 0 35px 60px -15px rgba(255, 255, 255, 0.1)',
+              },
 
             container: {
                 center: true,
@@ -112,5 +126,7 @@ module.exports = {
             },
         },
     },
-    plugins: [],
+    plugins: [
+        
+    ],
 }
