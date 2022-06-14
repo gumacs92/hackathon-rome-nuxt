@@ -24,7 +24,7 @@
         Apply for governor
       </button>
     </div>
-    <div class="grid grid-cols-1 text-sm font-bold  lg:grid-cols-3  lg:gap-x-16 lg:gap-y-28  lg:w-fit lg:mx-auto my-24">
+    <div class="grid grid-cols-1 text-sm font-bold gap-y-28  lg:grid-cols-3  lg:gap-x-16 lg:gap-y-28  lg:w-fit lg:mx-auto my-24">
       <div v-for="(governer,index) in governors" :key="index" class="text-center bg-black shadow-box rounded-lg p-9 cursor-pointer ">
         <img class="w-[135px] block mx-auto -mt-24" :src="governer.icon" :title="governer.name"><br>
         <h3 class="font-primary-light text-primary text-3xl">

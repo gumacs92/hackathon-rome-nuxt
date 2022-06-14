@@ -25,7 +25,7 @@
         Create suggestion
       </button>
     </div>
-    <div class="w-full mt-10 grid grid-cols-1 text-sm font-bold  lg:grid-cols-3  lg:gap-x-16 lg:gap-y-28  lg:w-fit lg:mx-auto my-24">
+    <div class="w-full mt-10 grid grid-cols-1 gap-y-12 text-sm font-bold  lg:grid-cols-3  lg:gap-x-16 lg:gap-y-28  lg:w-fit lg:mx-auto my-24">
       <div v-for="(offer,index) in offers" :key="index">
         <div class="w-full  p-12 bg-glassy backdrop-blur-md rounded-2xl my-auto">
           <div class="text-center bg-black shadow-box rounded-xl h-16 w-16 p-4 mb-3">

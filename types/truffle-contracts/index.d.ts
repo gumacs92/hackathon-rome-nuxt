@@ -4,7 +4,6 @@
 
 import { GovernorElectionContract } from "./GovernorElection";
 import { MigrationsContract } from "./Migrations";
-import { OwnableContract } from "./Ownable";
 import { ProposalElectionContract } from "./ProposalElection";
 import { RomeElectionContract } from "./RomeElection";
 
@@ -13,7 +12,6 @@ declare global {
     interface Artifacts {
       require(name: "GovernorElection"): GovernorElectionContract;
       require(name: "Migrations"): MigrationsContract;
-      require(name: "Ownable"): OwnableContract;
       require(name: "ProposalElection"): ProposalElectionContract;
       require(name: "RomeElection"): RomeElectionContract;
     }
@@ -25,7 +23,6 @@ export {
   GovernorElectionInstance,
 } from "./GovernorElection";
 export { MigrationsContract, MigrationsInstance } from "./Migrations";
-export { OwnableContract, OwnableInstance } from "./Ownable";
 export {
   ProposalElectionContract,
   ProposalElectionInstance,

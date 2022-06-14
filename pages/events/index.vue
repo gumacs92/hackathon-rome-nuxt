@@ -6,7 +6,7 @@
         Create
       </button>
     </div>
-    <div class="grid grid-cols-2 text-sm font-bold  lg:grid-cols-5  lg:gap-16  lg:w-fit lg:mx-auto my-16">
+    <div class="grid grid-cols-2 gap-4 text-sm font-bold  lg:grid-cols-5  lg:gap-16  lg:w-fit lg:mx-auto my-16">
       <div v-for="(category,index) in categories" :key="index" class="text-center bg-black shadow-box rounded-lg p-9 cursor-pointer ">
         <img class="w-[50px] block mx-auto" :src="category.icon" :title="category.name"><br>
         <p class="text-primary">
