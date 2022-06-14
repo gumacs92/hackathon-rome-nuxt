@@ -1,6 +1,6 @@
 
-
 const GovernorElection = artifacts.require("GovernorElection");
+const ProposalElection = artifacts.require("ProposalElection");
 
 // module.exports = function (
 //   deployer: Truffle.Deployer,
@@ -9,7 +9,6 @@ const GovernorElection = artifacts.require("GovernorElection");
 //   deployer.deploy(RomeElection);
 // };
 
-module.exports = function (
-  deployer) {
-  deployer.deploy(GovernorElection);
+module.exports = async function (deployer) {
+  deployer.deploy(ProposalElection, GovernorElection.address);
 };

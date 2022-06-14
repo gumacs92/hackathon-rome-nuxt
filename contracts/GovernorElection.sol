@@ -108,6 +108,7 @@ contract GovernorElection is Ownable {
     }
 
     function vote(uint256 voteForId) public onlyWhenElectionIsActive onlyWhenEligibleToVote {
+        //TODO only token holders are eligibel for voting
         //increment the vote mapping for the candidate
         candidateVotes[voteForId]++;
         //and increment its votes
