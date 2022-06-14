@@ -2,17 +2,26 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import { GovernorElectionContract } from "./GovernorElection";
 import { MigrationsContract } from "./Migrations";
+import { OwnableContract } from "./Ownable";
 import { RomeElectionContract } from "./RomeElection";
 
 declare global {
   namespace Truffle {
     interface Artifacts {
+      require(name: "GovernorElection"): GovernorElectionContract;
       require(name: "Migrations"): MigrationsContract;
+      require(name: "Ownable"): OwnableContract;
       require(name: "RomeElection"): RomeElectionContract;
     }
   }
 }
 
+export {
+  GovernorElectionContract,
+  GovernorElectionInstance,
+} from "./GovernorElection";
 export { MigrationsContract, MigrationsInstance } from "./Migrations";
+export { OwnableContract, OwnableInstance } from "./Ownable";
 export { RomeElectionContract, RomeElectionInstance } from "./RomeElection";
