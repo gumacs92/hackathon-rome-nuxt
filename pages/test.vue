@@ -50,10 +50,15 @@ import GET_PUBLICATIONS from '~/graphql/get-publications.js'
 import CREATE_COMMENT_TYPED_DATA from '~/graphql/create-comment-typed-data.js'
 import CREATE_FOLLOW_TYPED_DATA from '~/graphql/create-follow-typed-data.js'
 import GET_PUBLICATION from '~/graphql/get-publication.js'
+// import ENABLED_MODULES from '~/graphql/enabled-modules.js'
+// import ENABLED_MODULE_CURRENCIES from '~/graphql/enabled-module-currencies.js'
 import LensHubFactory from '~/utilities/lens-hub.js'
-import HAS_TX_BEEN_INDEXED from '~/utilities/has-transaction-been-indexed.js'
+// import HAS_TX_BEEN_INDEXED from '~/utilities/has-transaction-been-indexed.js'
+
+import StoreComputed from '~/mixins/storeComputed'
 
 export default {
+  mixins: [StoreComputed],
   data () {
     return {
       accessToken: null,
@@ -62,10 +67,15 @@ export default {
       }
     }
   },
-  computed: {
-    address () {
-      return this.$store.state.connectedAddress
-    }
+  async beforeMount () {
+    // let result = await this.$apollo.query({
+    //   query: ENABLED_MODULE_CURRENCIES
+    // })
+    // console.log('enabled currencies:', result)
+    // result = await this.$apollo.query({
+    //   query: ENABLED_MODULES
+    // })
+    // console.log('enabled modules:', result)
   },
   methods: {
     async authenticate () {
@@ -171,11 +181,8 @@ export default {
         contentURI,
         collectModule: {
           freeCollectModule: {
-            followerOnly: true
+            followerOnly: false
           }
-        },
-        referenceModule: {
-          followerOnlyReferenceModule: false
         }
       }
       const createPostResponse = await this.$apollo.mutate({
@@ -188,7 +195,7 @@ export default {
 
       const typedData = createPostResponse.data.createPostTypedData.typedData
       // console.log(typedData)
-      const signature = await Signer.instance().signedTypeData(typedData.domain, typedData.types, Object.assign(typedData.value, { contentURI }))
+      const signature = await Signer.instance().signedTypeData(typedData.domain, typedData.types, typedData.value)
       // console.log(signature)
       const { v, r, s } = Signer.instance().splitSignature(signature)
 
