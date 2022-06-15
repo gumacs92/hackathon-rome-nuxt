@@ -147,6 +147,7 @@ export default {
       }
       this.loading = true
 
+      // TODO repalce forceApplyAsCandidate with simple
       const transaction = await Moralis.executeFunction({
         abi: GovernorElection.abi,
         contractAddress: GovernorElection.networks[this.$config.networkId].address,
@@ -167,6 +168,7 @@ export default {
       }
       this.loading = true
 
+      // TODO repalce force vote with simple vote
       const transaction = await Moralis.executeFunction({
         abi: GovernorElection.abi,
         contractAddress: GovernorElection.networks[this.$config.networkId].address,
@@ -185,6 +187,7 @@ export default {
     async forceEnableElection () {
       this.loading = true
 
+      // TODO remove this altogether
       const tx = await Moralis.executeFunction({
         abi: GovernorElection.abi,
         contractAddress: GovernorElection.networks[this.$config.networkId].address,
