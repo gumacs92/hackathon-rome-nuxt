@@ -148,7 +148,7 @@ contract GovernorElection is Ownable {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    /////////ONLY OWNER FUNCTIONS FOR DEBUGGING
+    /////////FUNCTIONS FOR DEBUGGING
     ///////////////////////////////////////////////////////////////////////////
     function setElectionLastsFor(uint256 electionLastsFor) onlyOwner public{
         //TODO require that only the owner can call this function
@@ -168,7 +168,22 @@ contract GovernorElection is Ownable {
         election.electionEndsAt = block.timestamp + (ELECTION_START_IN+ELECTION_LASTS_FOR);
     }
 
-    function forceApplyAsCandidate(string memory name, string memory description) public onlyOwner {
+
+    function forceVote(uint256 voteForId) public {
+        //TODO only token holders are eligibel for voting
+        //increment the vote mapping for the candidate
+        candidateVotes[voteForId]++;
+        //and increment its votes
+        for(uint i = 0; i < elections[electionNum-1].candidates.length; i++) {
+            if (elections[electionNum-1].candidates[i].id == voteForId) {
+                elections[electionNum-1].candidates[i].votes++;
+            }
+        }
+        //add the address to the alreadyVoted array
+        elections[electionNum-1].alreadyVoted.push(msg.sender);
+    }
+
+    function forceApplyAsCandidate(string memory name, string memory description) public {
         Candidate memory newCandidate = Candidate({
             id: candidateNum++,
             name: name,

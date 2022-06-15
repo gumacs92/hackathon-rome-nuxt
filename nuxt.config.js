@@ -25,7 +25,8 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: "~/plugins/apollo.js", mode: 'client' },
-    "~/plugins/moralis.client.js"
+    "~/plugins/moralis.client.js",
+    '~/plugins/components/index.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -67,5 +68,6 @@ export default {
     moralisAppId: process.env.MORALIS_APP_ID || '',
     moralisServerUrl: process.env.MORALIS_SERVER_URL || '',
     lensHubContractAddress: process.env.LENS_HUB_CONTRACT_ADDRESS || '',
+    networkId: process.env.NETWORK_ID || "5777",
   }
 }

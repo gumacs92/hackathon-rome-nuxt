@@ -1,16 +1,17 @@
 
 export const state = {
-  connectedAddress: null
-}
-
-export const getters = {
-  getConnectedAddress: (state) => {
-    return state.connectedAddress
+  auth: {
+    user: null,
+    username: null,
+    address: null
   }
 }
 
 export const mutations = {
-  setConnectedAddress: (state, payload) => {
-    state.connectedAddress = payload
+  setUser: (state, user) => {
+    console.log(user)
+    state.auth.user = user
+    state.auth.address = user ? user.get('ethAddress') : null
+    state.auth.username = user ? user.get('username') : null
   }
 }

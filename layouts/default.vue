@@ -6,7 +6,7 @@
       </div>
       <!-- TODO show only first and last 4 characters= 0x04...abcd-->
       <div v-else class="" @click="logOut()">
-        Logged in as: {{ address }}
+        Connected as: {{ address }}
       </div>
     </div>
     <div class="cursor-pointer" />
@@ -46,24 +46,17 @@
 import Moralis from 'moralis'
 import Modal from '~/components/Modal.vue'
 import Navbar from '~/components/navbar.vue'
+import StoreComputed from '~/mixins/storeComputed'
 
 export default {
   components: {
     Modal,
     Navbar
   },
+  mixins: [StoreComputed],
   data () {
     return {
-      showConnectWalletModal: false,
-      user: null // Amelyik változóra this-el hivatkozunk az mind itt található a data-ban
-
-      // coinbaseWallet: null,
-      // walletConnector: null,
-    }
-  },
-  computed: {
-    address () {
-      return this.$store.state.connectedAddress
+      showConnectWalletModal: false
     }
   },
   beforeMount () {
@@ -71,16 +64,16 @@ export default {
   },
   methods: {
     initMoralisUser () {
-      this.user = Moralis.User.current()
-      if (this.user) { this.$store.commit('setConnectedAddress', this.user.get('ethAddress')) }
+      const user = Moralis.User.current()
+      if (user) { this.$store.commit('setUser', user) }
     },
     async connectWithMoralis () {
       if (!this.user) {
         try {
-          this.user = await Moralis.authenticate({
+          const user = await Moralis.authenticate({
             signingMessage: 'Log in using Moralis'
           })
-          if (this.user) { this.$store.commit('setConnectedAddress', this.user.get('ethAddress')) }
+          if (user) { this.$store.commit('setUser', user) }
         } catch (e) {
           console.log(e)
         }
@@ -89,8 +82,7 @@ export default {
     },
     async logOut () {
       await Moralis.User.logOut()
-      this.user = null
-      this.$store.commit('setConnectedAddress', null)
+      this.$store.commit('setUser', null)
     }
   }
 }
