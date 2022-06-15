@@ -20,13 +20,13 @@
       </div>
     </div>
     <div class="w-full flex flex-row justify-between">
-      <h2>Offers</h2>
+      <h2>Proposals</h2>
       <button v-if="!isOffering" class="btn-primary " @click="isOffering =true">
         Create suggestion
       </button>
     </div>
     <div class="w-full mt-10 grid grid-cols-1 gap-y-12 text-sm font-bold  lg:grid-cols-3  lg:gap-x-16 lg:gap-y-28  lg:w-fit lg:mx-auto my-24">
-      <div v-for="(offer,index) in offers" :key="index">
+      <div v-for="(offer,index) in proposals" :key="index">
         <div class="w-full  p-12 bg-glassy backdrop-blur-md rounded-2xl my-auto">
           <div class="text-center bg-black shadow-box rounded-xl h-16 w-16 p-4 mb-3">
             <img :src="getImage(offer.category, 'icon')" class="rounded-xl  ">
@@ -92,7 +92,7 @@ export default {
         { name: 'Tools', icon: '/img/icons/tools.svg', img: '/img/tools.jpg', id: '3' },
         { name: 'Renovation', icon: '/img/icons/artist.svg', img: '/img/renovation.jpg', id: '4' }
       ],
-      offers: [
+      proposals: [
         {
           title: 'Electric car sharing',
           category: '2',

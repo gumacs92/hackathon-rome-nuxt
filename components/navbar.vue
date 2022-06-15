@@ -42,7 +42,7 @@ export default {
         { name: 'home', url: '/' },
         { name: 'events', url: '/events' },
         { name: 'governors', url: '/governors' },
-        { name: 'offers', url: '/offers' },
+        { name: 'proposals', url: '/proposals' },
         { name: 'login', url: '/' }
       ]
     }
