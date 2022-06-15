@@ -51,6 +51,7 @@ import CREATE_COMMENT_TYPED_DATA from '~/graphql/create-comment-typed-data.js'
 import CREATE_FOLLOW_TYPED_DATA from '~/graphql/create-follow-typed-data.js'
 import GET_PUBLICATION from '~/graphql/get-publication.js'
 import LensHubFactory from '~/utilities/lens-hub.js'
+import HAS_TX_BEEN_INDEXED from '~/utilities/has-transaction-been-indexed.js'
 
 export default {
   data () {
@@ -290,6 +291,52 @@ export default {
       })
       console.log('get Publication Response is', getPublicationResponse)
     }
+    // async hasTransactionBeenIndexed () {
+    //   const hasTransactionBeenIndexedResponse = await this.$apollo.query({
+    //     query: HAS_TX_BEEN_INDEXED,
+    //     variables: {
+    //       request: {
+    //         txHash
+    //       }
+    //     },
+    //     fetchPolicy: 'network-only'
+    //   })
+    //   console.log(hasTransactionBeenIndexedResponse)
+
+    //   const sleep = (milliseconds) => {
+    //     return new Promise(resolve => setTimeout(resolve, milliseconds))
+    //   }
+    // }
+
+    // async pollUntilIndexed (txHash) {
+    //   // eslint-disable-next-line no-constant-condition
+    //   while (true) {
+    //     const result = await hasTxBeenIndexed(txHash)
+
+    //     const response = result.data.hasTxHashBeenIndexed
+    //     if (response.__typename === 'TransactionIndexedResult') {
+    //       console.log('pool until indexed: indexed', response.indexed)
+
+    //       if (response.metadataStatus) {
+    //         if (response.metadataStatus.status === 'SUCCESS') {
+    //           return response
+    //         }
+
+    //         if (response.metadataStatus.status === 'METADATA_VALIDATION_FAILED') {
+    //           throw new Error(response.metadataStatus.reason)
+    //         }
+    //       } else if (response.indexed) {
+    //         return response
+    //       }
+
+    //       // sleep for a second before trying again
+    //       await sleep(1000)
+    //     } else {
+    //       // it got reverted and failed!
+    //       throw new Error(response.reason)
+    //     }
+    //   }
+    // }
 
   }
 }
