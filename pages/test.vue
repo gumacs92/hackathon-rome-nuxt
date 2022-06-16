@@ -67,7 +67,7 @@ export default {
       }
     }
   },
-  async beforeMount () {
+  beforeMount () {
     // let result = await this.$apollo.query({
     //   query: ENABLED_MODULE_CURRENCIES
     // })
@@ -76,6 +76,7 @@ export default {
     //   query: ENABLED_MODULES
     // })
     // console.log('enabled modules:', result)
+    console.log(LensHubFactory(this.$config))
   },
   methods: {
     async authenticate () {

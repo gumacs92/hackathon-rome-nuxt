@@ -3,26 +3,9 @@ pragma solidity >=0.8.0 <0.9.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+import { DataTypes } from './libraries/DataTypes.sol';
+
 contract GovernorElection is Ownable {
-    ///////////////////////////////////////////////////////////////////////////
-    /////////STRUCTS
-    ///////////////////////////////////////////////////////////////////////////
-    struct Candidate {
-        uint id;
-        string name;
-        string description;
-        address owner;
-        uint votes;
-    }
-
-    struct Election {
-        uint256 electionStartsAt;
-        uint256 electionEndsAt;
-        Candidate[] candidates;
-        address[] alreadyVoted;
-    }
-
-
     ///////////////////////////////////////////////////////////////////////////
     /////////CONSTANTS
     ///////////////////////////////////////////////////////////////////////////
@@ -34,10 +17,10 @@ contract GovernorElection is Ownable {
     /////////PROPERTY VARIABLES
     ///////////////////////////////////////////////////////////////////////////
     uint256 candidateNum = 0;
-    mapping(uint256 => Candidate) candidates;
+    mapping(uint256 => DataTypes.Governor) candidates;
 
     uint256 electionNum;
-    mapping(uint256 => Election) elections;
+    mapping(uint256 => DataTypes.Election) elections;
 
     // The mapping of the current candidate votes id => votes
     mapping(uint => uint) candidateVotes;
@@ -48,7 +31,7 @@ contract GovernorElection is Ownable {
     /////////CONSTRUCTOR
     ///////////////////////////////////////////////////////////////////////////
     constructor() {
-        Election storage election = elections[electionNum++];
+        DataTypes.Election storage election = elections[electionNum++];
         election.electionStartsAt = block.timestamp + ELECTION_START_IN; //first election starts ELECTION_LASTS_FOR from now
         election.electionEndsAt = block.timestamp + (ELECTION_START_IN+ELECTION_LASTS_FOR); //and ends 2*ELECTION_LASTS_FOR from now
     }
@@ -95,7 +78,7 @@ contract GovernorElection is Ownable {
     }
 
     function applyAsCandidate(string memory name, string memory description) public onlyWhenElectionIsNotActive {
-        Candidate memory newCandidate = Candidate({
+        DataTypes.Governor memory newCandidate = DataTypes.Governor({
             id: candidateNum++,
             name: name,
             description: description,
@@ -121,8 +104,29 @@ contract GovernorElection is Ownable {
         elections[electionNum-1].alreadyVoted.push(msg.sender);
     }
 
-    function getCurrentElection() public view returns(Election memory) {
-        Election memory election = elections[electionNum-1];
+    function getLastElectionWinners() public view returns (DataTypes.Governor[] memory) {
+        //return the top three voted candidates for the last election
+        DataTypes.Governor[] memory winners = new DataTypes.Governor[](3);
+        uint smallestVotedIndex = 0;
+
+        DataTypes.Election storage lastElection = elections[electionNum-2];
+
+        for(uint i = 0; i < lastElection.candidates.length; i++) {
+            if (winners[smallestVotedIndex].votes <= lastElection.candidates[i].votes) {
+                winners[smallestVotedIndex] = lastElection.candidates[i];
+
+                for(uint j = 0; j < winners.length; j++){
+                    if (winners[j].votes < winners[smallestVotedIndex].votes) {
+                        smallestVotedIndex = j;
+                    }
+                }
+            }
+        }
+        return winners;
+    }
+
+    function getCurrentElection() public view returns(DataTypes.Election memory) {
+        DataTypes.Election memory election = elections[electionNum-1];
         return election;
     }
 
@@ -135,7 +139,7 @@ contract GovernorElection is Ownable {
     //         if(block.timestamp > elections[electionNum-1].electionEndsAt){
     //             // election is over => close it
     //             //craete new election by incrementing the election num
-    //             Election storage election = elections[electionNum++];
+    //             DataTypes.Election storage election = elections[electionNum++];
 
     //             election.electionStartsAt = block.timestamp + ELECTION_START_IN;
     //             election.electionEndsAt = block.timestamp + (ELECTION_START_IN+ELECTION_LASTS_FOR);
@@ -162,7 +166,7 @@ contract GovernorElection is Ownable {
 
     function endCurrentElectionAndStartANewOne() onlyOwner public{
         //TODO require that only the owner can call this function
-        Election storage election = elections[electionNum++];
+        DataTypes.Election storage election = elections[electionNum++];
 
         election.electionStartsAt = block.timestamp;
         election.electionEndsAt = block.timestamp + (ELECTION_START_IN+ELECTION_LASTS_FOR);
@@ -184,7 +188,7 @@ contract GovernorElection is Ownable {
     }
 
     function forceApplyAsCandidate(string memory name, string memory description) public {
-        Candidate memory newCandidate = Candidate({
+        DataTypes.Governor memory newCandidate = DataTypes.Governor({
             id: candidateNum++,
             name: name,
             description: description,
