@@ -31,7 +31,13 @@
       Lens - Get Publication
     </button>
     <input id="ProfileHandle" type="text" placeholder="Pick handle for Creating Profile" style="border:solid">
-    <input id="MoralisPost" v-model="form.description" type="text" placeholder="Moralis Post description" style="border:solid">
+    <input id="MoralisPost" v-model="form.content" type="text" placeholder="Moralis Post description" style="border:solid">
+    <button style="border:solid" @click="explorePublications()">
+      Lens - Explore Publications
+    </button>
+    <button style="border:solid" @click="exploreProfiles()">
+      Lens - Explore Profiles
+    </button>
   </div>
 </template>
 
@@ -54,6 +60,8 @@ import GET_PUBLICATION from '~/graphql/get-publication.js'
 // import ENABLED_MODULE_CURRENCIES from '~/graphql/enabled-module-currencies.js'
 import LensHubFactory from '~/utilities/lens-hub.js'
 // import HAS_TX_BEEN_INDEXED from '~/utilities/has-transaction-been-indexed.js'
+import EXPLORE_PUBLICATIONS from '~/graphql/explore-publications.js'
+import EXPLORE_PROFILES from '~/graphql/explore-profiles.js'
 
 import StoreComputed from '~/mixins/storeComputed'
 
@@ -63,7 +71,15 @@ export default {
     return {
       accessToken: null,
       form: {
-        description: ''
+        description: 'A social network to connect web3 users and their communities',
+        version: '1.0.0',
+        // metadata_id, // ez elvileg lehet egy uuid
+        content: '',
+        external_url: 'https://zilly.social',
+        name: 'Zilly',
+        attributes: [],
+        //    media,
+        appId: 'zilly'
       }
     }
   },
@@ -162,7 +178,7 @@ export default {
       console.log('Your Profile Id is: ', getProfiles.data.profiles.items[0].id)
     },
     async createPost () {
-      const contentURI = await createIPFS(this.form.description)
+      const contentURI = await createIPFS(this.form.content)
       const getProfiles = await this.$apollo.query({
         query: GET_PROFILES,
         variables: {
@@ -225,6 +241,7 @@ export default {
           request: {
             ownedBy: [this.address],
             limit: 10
+
           }
         }
       })
@@ -292,11 +309,36 @@ export default {
         query: GET_PUBLICATION,
         variables: {
           request: {
-            publicationId: 'a38e25aa-45b4-4c51-beac-05e946b5debe'
+            publicationId: '498cb979-9bb4-4b62-9e18-fbb06aa9367a'
           }
         }
       })
       console.log('get Publication Response is', getPublicationResponse)
+    },
+    async explorePublications () {
+      const explorePublicationsResponse = await this.$apollo.query({
+        query: EXPLORE_PUBLICATIONS,
+        variables: {
+          request: {
+            sortCriteria: 'LATEST',
+            publicationTypes: ['POST'],
+            limit: 10,
+            sources: ['RomeLens']
+          }
+        }
+      })
+      console.log('Explore Publications Response is:', explorePublicationsResponse)
+    },
+    async exploreProfiles () {
+      const exploreProfilesResponse = await this.$apollo.query({
+        query: EXPLORE_PROFILES,
+        variables: {
+          request: {
+            sortCriteria: 'MOST_FOLLOWERS'
+          }
+        }
+      })
+      console.log('Explore Profiles Response is:', exploreProfilesResponse)
     }
     // async hasTransactionBeenIndexed () {
     //   const hasTransactionBeenIndexedResponse = await this.$apollo.query({
