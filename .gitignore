@@ -90,6 +90,5 @@ sw.*
 *.swp
 
 
-build
 artifacts
 .secret
