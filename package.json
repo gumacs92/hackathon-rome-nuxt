@@ -13,6 +13,7 @@
     "generate-types": "npx typechain --target=truffle-v5 'build/contracts/*.json'",
     "postinstall": "npx truffle compile && npm run generate-types",
     "deploy": "truffle migrate --reset --network loc_ganache_development && npm run generate-types",
+    "deploy-mumbai": "truffle migrate --reset --network matic_mumbai && npm run generate-types",
     "remix": "remixd -u https://remix.ethereum.org/"
   },
   "dependencies": {
@@ -39,6 +40,7 @@
     "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/tailwindcss": "^4.2.0",
     "@remix-project/remixd": "^0.6.2",
+    "@truffle/hdwallet-provider": "^2.0.9",
     "@typechain/truffle-v5": "^8.0.0",
     "@types/chai": "^4.3.1",
     "@types/mocha": "^9.1.1",

@@ -113,6 +113,12 @@ export interface GovernorElectionInstance extends Truffle.ContractInstance {
     ): Promise<number>;
   };
 
+  getLastElectionWinners(
+    txDetails?: Truffle.TransactionDetails
+  ): Promise<
+    { id: BN; name: string; description: string; owner: string; votes: BN }[]
+  >;
+
   getCurrentElection(
     txDetails?: Truffle.TransactionDetails
   ): Promise<{
@@ -307,6 +313,12 @@ export interface GovernorElectionInstance extends Truffle.ContractInstance {
         txDetails?: Truffle.TransactionDetails
       ): Promise<number>;
     };
+
+    getLastElectionWinners(
+      txDetails?: Truffle.TransactionDetails
+    ): Promise<
+      { id: BN; name: string; description: string; owner: string; votes: BN }[]
+    >;
 
     getCurrentElection(
       txDetails?: Truffle.TransactionDetails

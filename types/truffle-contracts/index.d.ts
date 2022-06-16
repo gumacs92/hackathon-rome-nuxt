@@ -6,6 +6,7 @@ import { GovernorElectionContract } from "./GovernorElection";
 import { MigrationsContract } from "./Migrations";
 import { OwnableContract } from "./Ownable";
 import { ProposalElectionContract } from "./ProposalElection";
+import { RomeElectionContract } from "./RomeElection";
 
 declare global {
   namespace Truffle {
@@ -14,6 +15,7 @@ declare global {
       require(name: "Migrations"): MigrationsContract;
       require(name: "Ownable"): OwnableContract;
       require(name: "ProposalElection"): ProposalElectionContract;
+      require(name: "RomeElection"): RomeElectionContract;
     }
   }
 }
@@ -28,3 +30,4 @@ export {
   ProposalElectionContract,
   ProposalElectionInstance,
 } from "./ProposalElection";
+export { RomeElectionContract, RomeElectionInstance } from "./RomeElection";
