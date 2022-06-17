@@ -207,6 +207,7 @@ export default {
   },
   beforeMount () {
     this.explorePublications()
+    this.$rxt.toast('Title', 'Description....')
   },
   methods: {
     async createPost () {

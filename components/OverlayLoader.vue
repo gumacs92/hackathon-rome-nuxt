@@ -4,10 +4,15 @@
   >
     <div
       ref="overlay"
-      class="z-[60] fixed top-0 opacity-70 bg-gray-300 left-0 w-full h-full place-content-center"
-      :class="{'flex  justify-center items-center': loading, 'hidden': !loading}"
+      class="z-[60] fixed top-0 opacity-70 bg-black left-0 w-full h-full place-content-center"
+      :class="{'flex flex-col  justify-center items-center': loading, 'hidden': !loading}"
     >
-      <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-24 w-24 " />
+      <!-- <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-600 h-24 w-24 " /> -->
+      <img class="loader h-56 " src="/img/overlay-spiral.svg" alt="">
+
+      <p class="text-white mt-10">
+        loading ...
+      </p>
     </div>
 
     <slot />
@@ -81,9 +86,9 @@ export default {
 </script>
 <style>
   .loader {
-    border-top-color: rgb(151, 17, 16);
-    -webkit-animation: spinner 1.5s linear infinite;
-    animation: spinner 1.5s linear infinite;
+    border-top-color: #0EFB0E;
+    -webkit-animation: spinner 5s linear infinite;
+    animation: spinner 5s linear infinite;
   }
 
   @-webkit-keyframes spinner {
@@ -93,6 +98,6 @@ export default {
 
   @keyframes spinner {
     0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    100% { transform: rotate(360deg)  }
   }
 </style>

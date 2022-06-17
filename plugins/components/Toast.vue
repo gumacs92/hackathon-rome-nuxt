@@ -1,13 +1,13 @@
 <template>
   <div
-    class="fixed w-60 z-50 bg-white rounded-3xl shadow-md"
+    class="fixed w-60 z-50 rounded-3xl shadow-md"
     :style="'top: ' + (120 + offset) + 'px; right: 10px;'"
   >
     <div class="flex flex-col">
-      <h2 class="p-3 border-b bg-red-50" style="border-top-left-radius: 1.5rem; border-top-right-radius: 1.5rem">
+      <h2 class="p-3 bg-primary text-lg text-black" style="border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem">
         {{ title }}
       </h2>
-      <p class="p-3">
+      <p class="p-3  bg-glassy text-primary text-sm" style="border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem">
         {{ message }}
       </p>
     </div>

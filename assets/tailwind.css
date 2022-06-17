@@ -33,7 +33,7 @@
   }
   h2{
     @apply text-white text-3xl font-body
-  }
+  } 
   .btn-primary{
     @apply px-4 py-1 border rounded-md text-white border-primary hover:bg-primary hover:text-black 
   }
