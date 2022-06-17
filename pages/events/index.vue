@@ -46,11 +46,11 @@
       <div class="w-full mt-10">
         <div v-for="(event,index) in events" :key="index" class="rounded-xl flex flex-col lg:flex-row 2xl:px-24 my-10">
           <div class="w-full lg:w-2/3 lg:ml-16">
-            <img :src="getImage(event.category, 'img')" class="rounded-2xl h-60 lg:h-full " style="width:fit-content;" alt="">
+            <img :src="getImage(event.categoryId, 'img')" class="rounded-2xl h-60 lg:h-full " style="width:fit-content;" alt="">
           </div>
           <div class="w-full lg:w-1/3 lg:-ml-36 p-12 bg-glassy backdrop-blur-md rounded-2xl my-auto">
             <div class="text-center bg-black shadow-box rounded-xl h-16 w-16 p-4 mb-3">
-              <img :src="getImage(event.category, 'icon')" class="rounded-xl  ">
+              <img :src="getImage(event.categoryId, 'icon')" class="rounded-xl  ">
             </div>
             <h3 class="text-primary text-4xl">
               {{ event.title }}
@@ -65,12 +65,12 @@
                 </button>
               </div>
 
-              <div class="flex">
+              <!-- <div class="flex">
                 <p class="text-sm text-primary my-auto pr-4">
                   powered by
                 </p>
                 <img :src="'/img/'+event.powered+'.png'" alt="">
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -207,37 +207,37 @@ export default {
   },
   beforeMount () {
     this.explorePublications()
-    this.$rxt.toast('Title', 'Description....')
   },
   methods: {
     async createPost () {
       this.loading = true
+      console.log('user profile:', this.profile)
+
       const contentURI = await createIPFS(this.form)
 
-      const createPostRequest = {
-        profileId: this.profile.id,
-        contentURI,
-        collectModule: {
-          freeCollectModule: {
-            followerOnly: false
-          }
-        }
-      }
       const createPostResponse = await this.$apollo.mutate({
         mutation: CREATE_POST_TYPED_DATA,
         variables: {
-          request: createPostRequest
+          request: {
+            profileId: this.profile.id,
+            contentURI,
+            collectModule: {
+              freeCollectModule: {
+                followerOnly: false
+              }
+            }
+          }
         }
       })
       console.log('Lens Post Response is:', createPostResponse)
 
       const typedData = createPostResponse.data.createPostTypedData.typedData
-      // console.log(typedData)
+      console.log('typedData:', typedData)
       const signature = await Signer.instance().signedTypeData(typedData.domain, typedData.types, typedData.value)
       // console.log(signature)
       const { v, r, s } = Signer.instance().splitSignature(signature)
 
-      console.log(v, r, s)
+      console.log('splitSignature:', v, r, s)
 
       const tx = await LensHubFactory(this.$config).postWithSig({
         profileId: typedData.value.profileId,
@@ -272,10 +272,11 @@ export default {
         }
       })
       console.log('Explore Publications Response is:', explorePublicationsResponse)
-      const result = explorePublicationsResponse.data.explorePublications.items.filter((i) => {
+      // filter out only usable events
+      this.events = explorePublicationsResponse.data.explorePublications.items.filter((i) => {
         return i && i.metadata && i.metadata.content instanceof Object
-      }).map(i => i.metadata)
-      console.log('Explore Publications Response is:', result)
+      }).map(i => i.metadata.content)
+      console.log('Explore Publications Response is:', this.events)
       this.loading = false
     },
     getImage (categoryId, type) {

@@ -42,27 +42,29 @@ export default {
   },
   methods: {
     calculateIconPosition () {
-      if (this.icon.value && this.overlay.value) {
-        const overlayHeight = this.overlay.value.getBoundingClientRect().height
-        const overlayAbsoluteTop = this.caluclateElAbsoluteOffsetTop(this.overlay.value)
-        // const scrollbarHeight = window.innerHeight * (window.innerHeight / document.body.offsetHeight)
-        // console.log('rectangle bottom:' + ((articlesBottom + 75) - 150))
-        // console.log('scroll y:' + (scrollbarHeight + window.scrollY))
-        // console.log('scrollbarHeight y:' + (scrollbarHeight ))
-        // console.log('window scroll y: ' + window.scrollY)
-        // console.log('overlay absolutetop: ' + overlayAbsoluteTop)
-        // console.log('overlay height: ' + overlayHeight)
-        // console.log('overlay height: ' + overlay.offsetHeight)
-        // positionTop =
+      if (this.icon && this.overlay) {
+        if (this.icon.value && this.overlay.value) {
+          const overlayHeight = this.overlay.value.getBoundingClientRect().height
+          const overlayAbsoluteTop = this.caluclateElAbsoluteOffsetTop(this.overlay.value)
+          // const scrollbarHeight = window.innerHeight * (window.innerHeight / document.body.offsetHeight)
+          // console.log('rectangle bottom:' + ((articlesBottom + 75) - 150))
+          // console.log('scroll y:' + (scrollbarHeight + window.scrollY))
+          // console.log('scrollbarHeight y:' + (scrollbarHeight ))
+          // console.log('window scroll y: ' + window.scrollY)
+          // console.log('overlay absolutetop: ' + overlayAbsoluteTop)
+          // console.log('overlay height: ' + overlayHeight)
+          // console.log('overlay height: ' + overlay.offsetHeight)
+          // positionTop =
 
-        this.topPosition.value = ((window.innerHeight / 2) * ((window.scrollY > overlayAbsoluteTop ? overlayAbsoluteTop : window.scrollY) / overlayAbsoluteTop))
-        if (window.scrollY > (overlayAbsoluteTop + 50)) { this.topPosition.value += window.scrollY - (overlayAbsoluteTop + 50) }
+          this.topPosition.value = ((window.innerHeight / 2) * ((window.scrollY > overlayAbsoluteTop ? overlayAbsoluteTop : window.scrollY) / overlayAbsoluteTop))
+          if (window.scrollY > (overlayAbsoluteTop + 50)) { this.topPosition.value += window.scrollY - (overlayAbsoluteTop + 50) }
 
-        if (this.topPosition.value < 50) {
-          this.topPosition.value = 50
-        }
-        if (this.topPosition.value > (overlayHeight - 125)) { this.topPosition.value = overlayHeight - 125 }
+          if (this.topPosition.value < 50) {
+            this.topPosition.value = 50
+          }
+          if (this.topPosition.value > (overlayHeight - 125)) { this.topPosition.value = overlayHeight - 125 }
         // if ((listBottom + 75) - 1000 < (scrollbarHeight + window.scrollY) && !this.$fetchState.pending) {
+        }
       }
     },
     caluclateElAbsoluteOffsetTop (el) {

@@ -5,7 +5,7 @@ import Web3 from 'web3'
 export default async function ({ $config }) {
   console.log('hello')
   await Moralis.start({ appId: $config.moralisAppId, serverUrl: $config.moralisServerUrl })
-  await Moralis.enableWeb3()
+  await Moralis.enableWeb3({ provider: 'metamask' })
   await Moralis.initPlugins()
 }
 

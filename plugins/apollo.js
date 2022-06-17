@@ -5,7 +5,7 @@ import Cookies from 'js-cookie'
 const httpLink = new HttpLink({ uri: 'https://api-mumbai.lens.dev/' })
 
 const authLink = new ApolloLink((operation, forward) => {
-  if (Cookies.get('access_token')) {
+  if (Cookies.get('accessToken')) {
     const accessToken = Cookies.get('accessToken')
     console.log('token', accessToken)
     operation.setContext({

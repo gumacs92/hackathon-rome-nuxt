@@ -8,7 +8,7 @@ const Signer = (function () {
   function SignerConstructor () {
     const ethers = Moralis.web3Library
     const provider = new ethers.providers.Web3Provider(window.ethereum)
-    const signer = provider.getSigner(this.address)
+    const signer = provider.getSigner()
     return {
       /// ////////////////////////////////////////////////////////////////////////////////////
       getSigner () {

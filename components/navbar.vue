@@ -241,7 +241,6 @@ export default {
       } else {
         this.isScrolled = false
       }
-      console.log(window.scrollY)
     }
   }
 }
