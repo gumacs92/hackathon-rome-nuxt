@@ -1,6 +1,6 @@
 <template>
   <OverlayLoader :loading="loading">
-    <nav class="fixed  lg:py-4 lg:px-28  w-screen  flex flex-col xl:flex-row xl:justify-between z-50">
+    <nav class="fixed  lg:py-4 lg:px-28  w-screen  flex flex-col xl:flex-row xl:justify-between z-50" :class="{'bg-black':isScrolled}">
       <div class="mx-4 py-2 w-full xl:w-1/6 self-center flex flex-row xl:block content-around lg:py-0  lg:mx-0">
         <nuxt-link to="/">
           <img src="/img/logo.png" class="h-[45px] my-auto  w-auto xl:mx-auto object-center object-contain py-2 px-4 lg:h-[75px] lg:px-0">
@@ -84,6 +84,7 @@ export default {
       loading: false,
       showLensModal: false,
       menuOpened: false,
+      isScrolled: false,
       form: {
         handle: ''
       },
@@ -98,14 +99,17 @@ export default {
       ]
     }
   },
+
   beforeMount () {
     if (process.browser) {
       window.addEventListener('click', this.close)
+      window.addEventListener('scroll', this.handleScroll)
     }
   },
   beforeDestroy () {
     if (process.browser) {
       window.removeEventListener('click', this.close)
+      window.removeEventListener('scroll', this.handleScroll)
     }
   },
   methods: {
@@ -230,6 +234,14 @@ export default {
       if (this.$el.contains(e.target) && (e.target.tagName === 'A' || e.target.tagName === 'IMG')) {
         this.menuOpened = false
       }
+    },
+    handleScroll () {
+      if (window.scrollY > 200) {
+        this.isScrolled = true
+      } else {
+        this.isScrolled = false
+      }
+      console.log(window.scrollY)
     }
   }
 }
