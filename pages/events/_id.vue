@@ -148,7 +148,6 @@ export default {
     getImage (categoryId, type) {
       let tmp = ''
       for (let i = 0; i < this.categories.length; i++) {
-        console.log('beleptem')
         if (this.categories[i].id === categoryId) {
           if (type === 'icon') {
             tmp = this.categories[i].icon

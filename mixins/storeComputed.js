@@ -8,6 +8,12 @@ export default {
     },
     address () {
       return this.$store.state.auth.address
+    },
+    profile () {
+      return this.$store.state.profile
+    },
+    accessToken () {
+      return this.$store.state.auth.accessToken
     }
   }
 }

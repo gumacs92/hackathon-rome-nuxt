@@ -6,11 +6,11 @@ const httpLink = new HttpLink({ uri: 'https://api-mumbai.lens.dev/' })
 
 const authLink = new ApolloLink((operation, forward) => {
   if (Cookies.get('access_token')) {
-    const token = Cookies.get('access_token')
-    console.log('token', token)
+    const accessToken = Cookies.get('accessToken')
+    console.log('token', accessToken)
     operation.setContext({
       headers: {
-        Authorization: token ? `Bearer ${token}` : ''
+        Authorization: accessToken ? `Bearer ${accessToken}` : ''
       }
     })
   }

@@ -69,5 +69,6 @@ export default {
     moralisServerUrl: process.env.MORALIS_SERVER_URL || '',
     lensHubContractAddress: process.env.LENS_HUB_CONTRACT_ADDRESS || '',
     networkId: process.env.NETWORK_ID || "5777",
+    alchemyApiKey: process.env.ALCHEMY_API_KEY || '',
   }
 }

@@ -43,13 +43,17 @@
 
 <script>
 import Cookies from 'js-cookie'
-import CHALLENGE from '~/graphql/challenge.js'
 import Signer from '~/utilities/Signer'
-import AUTHENTICATION from '~/graphql/authenticate.js'
-import CREATE_PROFILE from '~/graphql/create-profile.js'
-import GET_DEFAULT_PROFILES from '~/graphql/get-default-profile.js'
-import CREATE_SET_DEFAULT_PROFILE_TYPED_DATA from '~/graphql/set-default-profile.js'
-import GET_PROFILES from '~/graphql/get-profiles.js'
+
+import CHALLENGE from '~/graphql/authentication/challenge.js'
+import AUTHENTICATION from '~/graphql/authentication/authenticate.js'
+
+import CREATE_PROFILE from '~/graphql/profile/create-profile.js'
+import CREATE_SET_DEFAULT_PROFILE_TYPED_DATA from '~/graphql/profile/set-default-profile.js'
+import GET_PROFILES from '~/graphql/profile/get-profiles.js'
+import GET_DEFAULT_PROFILES from '~/graphql/profile/get-default-profile.js'
+import EXPLORE_PROFILES from '~/graphql/profile/explore-profiles.js'
+
 import CREATE_POST_TYPED_DATA from '~/graphql/create-post-typed-data.js'
 import createIPFS from '~/utilities/ipfs.js'
 import GET_PUBLICATIONS from '~/graphql/get-publications.js'
@@ -61,7 +65,6 @@ import GET_PUBLICATION from '~/graphql/get-publication.js'
 import LensHubFactory from '~/utilities/lens-hub.js'
 // import HAS_TX_BEEN_INDEXED from '~/utilities/has-transaction-been-indexed.js'
 import EXPLORE_PUBLICATIONS from '~/graphql/explore-publications.js'
-import EXPLORE_PROFILES from '~/graphql/explore-profiles.js'
 
 import StoreComputed from '~/mixins/storeComputed'
 
@@ -121,9 +124,7 @@ export default {
           }
         }
       })
-      // console.log('Lens authenticate data: ', authenticateResponse)
-      this.accessToken = authenticateResponse.data.authenticate.accessToken
-      Cookies.set('access_token', this.accessToken)
+      Cookies.set('tokens', authenticateResponse.data.authenticate)
     },
     async createProfile () {
       // validáció 5 tól 31-ig karakter, csak kisbetű és szám
