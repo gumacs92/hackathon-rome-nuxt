@@ -44,6 +44,10 @@
 <script>
 import Cookies from 'js-cookie'
 import Signer from '~/utilities/Signer'
+import createIPFS from '~/utilities/ipfs.js'
+import LensHubFactory from '~/utilities/lens-hub.js'
+
+import StoreComputed from '~/mixins/storeComputed'
 
 import CHALLENGE from '~/graphql/authentication/challenge.js'
 import AUTHENTICATION from '~/graphql/authentication/authenticate.js'
@@ -54,19 +58,16 @@ import GET_PROFILES from '~/graphql/profile/get-profiles.js'
 import GET_DEFAULT_PROFILES from '~/graphql/profile/get-default-profile.js'
 import EXPLORE_PROFILES from '~/graphql/profile/explore-profiles.js'
 
-import CREATE_POST_TYPED_DATA from '~/graphql/create-post-typed-data.js'
-import createIPFS from '~/utilities/ipfs.js'
-import GET_PUBLICATIONS from '~/graphql/get-publications.js'
-import CREATE_COMMENT_TYPED_DATA from '~/graphql/create-comment-typed-data.js'
-import CREATE_FOLLOW_TYPED_DATA from '~/graphql/create-follow-typed-data.js'
-import GET_PUBLICATION from '~/graphql/get-publication.js'
+import CREATE_POST_TYPED_DATA from '~/graphql/publication/create-post-typed-data.js'
+import GET_PUBLICATIONS from '~/graphql/publication/get-publications.js'
+import CREATE_COMMENT_TYPED_DATA from '~/graphql/publication/create-comment-typed-data.js'
+import GET_PUBLICATION from '~/graphql/publication/get-publication.js'
+import EXPLORE_PUBLICATIONS from '~/graphql/publication/explore-publications.js'
+
+import CREATE_FOLLOW_TYPED_DATA from '~/graphql/other/create-follow-typed-data.js'
 // import ENABLED_MODULES from '~/graphql/enabled-modules.js'
 // import ENABLED_MODULE_CURRENCIES from '~/graphql/enabled-module-currencies.js'
-import LensHubFactory from '~/utilities/lens-hub.js'
 // import HAS_TX_BEEN_INDEXED from '~/utilities/has-transaction-been-indexed.js'
-import EXPLORE_PUBLICATIONS from '~/graphql/explore-publications.js'
-
-import StoreComputed from '~/mixins/storeComputed'
 
 export default {
   mixins: [StoreComputed],

@@ -12,7 +12,7 @@ export default async function createIPFS (content) {
       content,
       external_url: 'valami.com',
       name: 'Rome',
-      atrributes: [],
+      attributes: [],
       //  media, // Ez nem kell ha van content
       appId: 'RomeLens'
     }))
@@ -20,8 +20,6 @@ export default async function createIPFS (content) {
 
   await metadataFile.saveIPFS()
   const metadataURI = metadataFile.ipfs()
-  // console.log(metadataFile)
-  // console.log(metadataURI)
 
   return metadataURI
 }
@@ -33,9 +31,9 @@ export default async function createIPFS (content) {
 //   metadata_id,
 //   description: "A social network to connect web3 users and their communities.",
 //   content: message,
-//   external_url: "https://zilly.social",
-//   name: "Zilly",
+//   external_url: "https://test.social",
+//   name: "Test",
 //   attributes: [],
 //   media,
-//   appId: "zilly"
+//   appId: "test"
 // })
