@@ -14,10 +14,11 @@ contract ProposalElection is Ownable {
         uint id;
         string title;
         string description;
-        string postId;
-        uint256 expectedAmount; //stored in wei
+        string eventId;
+        uint256 governerId;
+        uint256 donation; //stored in wei
         address owner;
-        address payable target;
+        address targetAddress;
 
         uint votes;
         bool passed;
@@ -29,7 +30,7 @@ contract ProposalElection is Ownable {
     ///////////////////////////////////////////////////////////////////////////
     /////////CONSTANTS
     ///////////////////////////////////////////////////////////////////////////
-    uint PROPOSAL_LASTS_FOR = 60*1; // 1 minute 
+    uint PROPOSAL_LASTS_FOR = 60*60; // 1 minute 
     //60*60*24*7; // 7 days
     
 
@@ -38,8 +39,8 @@ contract ProposalElection is Ownable {
     ///////////////////////////////////////////////////////////////////////////
     GovernorElection governorElection;
 
-    uint256 proposalNum;
-    Proposal[] proposals;
+    uint256 proposalNum = 0;
+    mapping(uint256 => Proposal) proposals;
     
 
     ///////////////////////////////////////////////////////////////////////////
@@ -68,9 +69,11 @@ contract ProposalElection is Ownable {
 
         bool foundGovernor = false;
         for(uint i = 0; i < governors.length; i++) {
-            foundGovernor = governors[i].owner == msg.sender;
+            if(governors[i].owner == msg.sender){
+                foundGovernor = true;
+            }
         }
-        require(foundGovernor, "You are not a governor");
+        require(foundGovernor == true, "You are not a governor");
         _;
     }
 
@@ -98,27 +101,29 @@ contract ProposalElection is Ownable {
         require(proposals[proposalId].transfered == false, "This proposal has been approved already");
         
         proposals[proposalId].transfered = true;
-        address payable targetAddress = proposals[proposalId].target;
-        targetAddress.transfer(proposals[proposalId].expectedAmount);
+        address payable targetAddress = payable (proposals[proposalId].targetAddress);
+        targetAddress.transfer(proposals[proposalId].donation);
     }
 
     function createProposal(
-        string memory postId, 
+        string memory eventId, 
         string memory title, 
         string memory description,
-        address payable target,
-        uint256 expectedAmount
-        ) public beAGovernor {
+        uint256 governorId,
+        address targetAddress,
+        uint256 donation
+        ) public {
         //TODO only governors can create proposals
         Proposal storage newProposal = proposals[proposalNum++];
 
-        newProposal.id = proposalNum++;
+        newProposal.id = proposalNum-1;
         newProposal.title = title;
         newProposal.description = description;
-        newProposal.postId = postId;
-        newProposal.expectedAmount = expectedAmount;
+        newProposal.eventId = eventId;
+        newProposal.donation = donation;
+        newProposal.governerId = governorId;
         newProposal.owner = msg.sender;
-        newProposal.target = target;
+        newProposal.targetAddress = targetAddress;
 
         newProposal.votes = 1;
         newProposal.passed = false;
@@ -130,8 +135,8 @@ contract ProposalElection is Ownable {
     function vote(uint256 proposalId) public beAGovernor onlyWhenEligibleToVote(proposalId) onlyWhenProposalIsActive(proposalId) {
         proposals[proposalId].votes++;
         proposals[proposalId].alreadyVoted.push(msg.sender);
-        //TODO instead of 2 votes, use the half of the total number of governors + 1
-        if(proposals[proposalId].votes > 2) {
+        //TODO instead of 1 votes, use the half of the total number of governors + 1
+        if(proposals[proposalId].votes >= 1) {
             proposals[proposalId].passed = true;
         }
     }
@@ -169,21 +174,21 @@ contract ProposalElection is Ownable {
     ///////////////////////////////////////////////////////////////////////////
     /////////ONLY OWNER FUNCTIONS FOR DEBUGGING
     ///////////////////////////////////////////////////////////////////////////
-    function setProposalLastsFor(uint256 proposalLastsFor) onlyOwner public{
+    function setProposalLastsFor(uint256 proposalLastsFor) public{
         PROPOSAL_LASTS_FOR = proposalLastsFor;
     }
 
-    function passProposal(uint256 proposalId) onlyOwner public{
+    function passProposal(uint256 proposalId) public{
         proposals[proposalId].passed = true;
     }
 
-    function forceApplyAsCandidate(string memory postId, string memory title, string memory description) public onlyOwner {
+    function forceApplyAsCandidate(string memory eventId, string memory title, string memory description) public {
         Proposal storage newProposal = proposals[proposalNum++];
 
         newProposal.id = proposalNum++;
         newProposal.title = title;
         newProposal.description = description;
-        newProposal.postId = postId;
+        newProposal.eventId = eventId;
         newProposal.owner = msg.sender;
         newProposal.votes = 1;
         newProposal.passed = false;

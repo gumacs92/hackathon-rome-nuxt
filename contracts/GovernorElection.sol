@@ -16,10 +16,10 @@ contract GovernorElection is Ownable {
     ///////////////////////////////////////////////////////////////////////////
     /////////PROPERTY VARIABLES
     ///////////////////////////////////////////////////////////////////////////
-    uint256 candidateNum = 0;
+    uint256 candidateNum = 1; //starts from 1 to help differentiate from 0 initalized candidates
     mapping(uint256 => DataTypes.Governor) candidates;
 
-    uint256 electionNum;
+    uint256 electionNum = 1; //starts from 1 to help differentiate from 0 initalized elections
     mapping(uint256 => DataTypes.Election) elections;
 
     // The mapping of the current candidate votes id => votes
@@ -154,17 +154,17 @@ contract GovernorElection is Ownable {
     ///////////////////////////////////////////////////////////////////////////
     /////////FUNCTIONS FOR DEBUGGING
     ///////////////////////////////////////////////////////////////////////////
-    function setElectionLastsFor(uint256 electionLastsFor) onlyOwner public{
+    function setElectionLastsFor(uint256 electionLastsFor) public{
         //TODO require that only the owner can call this function
         ELECTION_LASTS_FOR = electionLastsFor;
     }
 
-    function setElectionStartIn(uint256 electionStartIn) onlyOwner public{
+    function setElectionStartIn(uint256 electionStartIn) public{
         //TODO require that only the electionStartIn can call this function
         ELECTION_LASTS_FOR = electionStartIn;
     }
 
-    function endCurrentElectionAndStartANewOne() onlyOwner public{
+    function endCurrentElectionAndStartANewOne() public{
         //TODO require that only the owner can call this function
         DataTypes.Election storage election = elections[electionNum++];
 

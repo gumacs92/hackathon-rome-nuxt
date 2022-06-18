@@ -38,9 +38,34 @@
               Welcome: {{ profile.handle }}
             </button>
           </li>
+          <li class="min-w-[70px] text-center mt-[8px] md:mt-[16px] text-4xl lg:text-base hover:text-primary">
+            <button v-if="!accessToken" class="btn-primary" @click="showDonateModal">
+              Donate
+            </button>
+          </li>
         </ul>
       </div>
     </nav>
+
+    <Modal :show="showDonateModal">
+      <h2>Thank you for considering donation</h2>
+      <MyInput
+        v-model="form.donation"
+        placeholder="Name"
+        type="number"
+        class="w-full lg:w-2/3 mx-auto mt-10 "
+        has-errors
+        :validation-errors="errors['handle']"
+      />
+      <div class="text-center mt-10 flex flex-row gap-3 mx-auto w-auto">
+        <button class="btn-primary" @click="donateToVault()">
+          Donate profile
+        </button>
+        <button class="btn-primary" @click="showDonateModal = false">
+          Cancel
+        </button>
+      </div>
+    </Modal>
 
     <Modal :show="showLensModal">
       <h2>Create RomeLens profile </h2>
@@ -63,14 +88,14 @@ import StoreComputed from '~/mixins/storeComputed'
 import MyInput from '~/components/form/Input'
 import OverlayLoader from '~/components/OverlayLoader'
 
-import LensHubFactory from '~/utilities/lens-hub.js'
+import ProposalElection from '~/build/contracts/ProposalElection.json'
+
 import Signer from '~/utilities/Signer'
 
 import CHALLENGE from '~/graphql/authentication/challenge'
 import AUTHENTICATE from '~/graphql/authentication/authenticate'
 
 import CREATE_PROFILE from '~/graphql/profile/create-profile.js'
-import CREATE_SET_DEFAULT_PROFILE_TYPED_DATA from '~/graphql/profile/set-default-profile.js'
 import GET_PROFILES from '~/graphql/profile/get-profiles.js'
 
 export default {
@@ -83,13 +108,16 @@ export default {
     return {
       loading: false,
       showLensModal: false,
+      showDonateModal: false,
       menuOpened: false,
       isScrolled: false,
       form: {
-        handle: ''
+        handle: '',
+        donation: ''
       },
       errors: {
-        handle: []
+        handle: [],
+        donation: []
       },
       menuItems: [
         { name: 'home', url: '/' },
@@ -113,6 +141,26 @@ export default {
     }
   },
   methods: {
+    async donateToVault () {
+      this.loading = true
+      if (!this.user) {
+        this.loading = false
+        this.$rxt.toast('Error', 'Please connect your wallet before donating')
+      }
+
+      const tx = await Moralis.executeFunction({
+        contractAddress: ProposalElection.networks[this.$config.networkId].address,
+        abi: ProposalElection.abi,
+        functionName: 'donate',
+        msgValue: Moralis.Units.ETH(this.form.donation)
+      })
+
+      await tx.wait()
+
+      this.$rxt.toast('Success', 'Than you for your generous donation')
+      this.showDonateModal = false
+      this.loading = false
+    },
     async authenticateLens () {
       console.log(this.address)
       const challengeResponse = await this.$apollo.query({

@@ -2,28 +2,42 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import { ERC20Contract } from "./ERC20";
 import { GovernorElectionContract } from "./GovernorElection";
+import { IERC20Contract } from "./IERC20";
+import { IERC20MetadataContract } from "./IERC20Metadata";
 import { MigrationsContract } from "./Migrations";
 import { OwnableContract } from "./Ownable";
 import { ProposalElectionContract } from "./ProposalElection";
 import { RomeElectionContract } from "./RomeElection";
+import { RomeTokenContract } from "./RomeToken";
 
 declare global {
   namespace Truffle {
     interface Artifacts {
+      require(name: "ERC20"): ERC20Contract;
       require(name: "GovernorElection"): GovernorElectionContract;
+      require(name: "IERC20"): IERC20Contract;
+      require(name: "IERC20Metadata"): IERC20MetadataContract;
       require(name: "Migrations"): MigrationsContract;
       require(name: "Ownable"): OwnableContract;
       require(name: "ProposalElection"): ProposalElectionContract;
       require(name: "RomeElection"): RomeElectionContract;
+      require(name: "RomeToken"): RomeTokenContract;
     }
   }
 }
 
+export { ERC20Contract, ERC20Instance } from "./ERC20";
 export {
   GovernorElectionContract,
   GovernorElectionInstance,
 } from "./GovernorElection";
+export { IERC20Contract, IERC20Instance } from "./IERC20";
+export {
+  IERC20MetadataContract,
+  IERC20MetadataInstance,
+} from "./IERC20Metadata";
 export { MigrationsContract, MigrationsInstance } from "./Migrations";
 export { OwnableContract, OwnableInstance } from "./Ownable";
 export {
@@ -31,3 +45,4 @@ export {
   ProposalElectionInstance,
 } from "./ProposalElection";
 export { RomeElectionContract, RomeElectionInstance } from "./RomeElection";
+export { RomeTokenContract, RomeTokenInstance } from "./RomeToken";

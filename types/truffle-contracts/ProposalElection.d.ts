@@ -100,35 +100,39 @@ export interface ProposalElectionInstance extends Truffle.ContractInstance {
 
   createProposal: {
     (
-      postId: string,
+      eventId: string,
       title: string,
       description: string,
-      target: string,
-      expectedAmount: number | BN | string,
+      governorId: number | BN | string,
+      targetAddress: string,
+      donation: number | BN | string,
       txDetails?: Truffle.TransactionDetails
     ): Promise<Truffle.TransactionResponse<AllEvents>>;
     call(
-      postId: string,
+      eventId: string,
       title: string,
       description: string,
-      target: string,
-      expectedAmount: number | BN | string,
+      governorId: number | BN | string,
+      targetAddress: string,
+      donation: number | BN | string,
       txDetails?: Truffle.TransactionDetails
     ): Promise<void>;
     sendTransaction(
-      postId: string,
+      eventId: string,
       title: string,
       description: string,
-      target: string,
-      expectedAmount: number | BN | string,
+      governorId: number | BN | string,
+      targetAddress: string,
+      donation: number | BN | string,
       txDetails?: Truffle.TransactionDetails
     ): Promise<string>;
     estimateGas(
-      postId: string,
+      eventId: string,
       title: string,
       description: string,
-      target: string,
-      expectedAmount: number | BN | string,
+      governorId: number | BN | string,
+      targetAddress: string,
+      donation: number | BN | string,
       txDetails?: Truffle.TransactionDetails
     ): Promise<number>;
   };
@@ -159,10 +163,11 @@ export interface ProposalElectionInstance extends Truffle.ContractInstance {
       id: BN;
       title: string;
       description: string;
-      postId: string;
-      expectedAmount: BN;
+      eventId: string;
+      governerId: BN;
+      donation: BN;
       owner: string;
-      target: string;
+      targetAddress: string;
       votes: BN;
       passed: boolean;
       transfered: boolean;
@@ -213,25 +218,25 @@ export interface ProposalElectionInstance extends Truffle.ContractInstance {
 
   forceApplyAsCandidate: {
     (
-      postId: string,
+      eventId: string,
       title: string,
       description: string,
       txDetails?: Truffle.TransactionDetails
     ): Promise<Truffle.TransactionResponse<AllEvents>>;
     call(
-      postId: string,
+      eventId: string,
       title: string,
       description: string,
       txDetails?: Truffle.TransactionDetails
     ): Promise<void>;
     sendTransaction(
-      postId: string,
+      eventId: string,
       title: string,
       description: string,
       txDetails?: Truffle.TransactionDetails
     ): Promise<string>;
     estimateGas(
-      postId: string,
+      eventId: string,
       title: string,
       description: string,
       txDetails?: Truffle.TransactionDetails
@@ -313,35 +318,39 @@ export interface ProposalElectionInstance extends Truffle.ContractInstance {
 
     createProposal: {
       (
-        postId: string,
+        eventId: string,
         title: string,
         description: string,
-        target: string,
-        expectedAmount: number | BN | string,
+        governorId: number | BN | string,
+        targetAddress: string,
+        donation: number | BN | string,
         txDetails?: Truffle.TransactionDetails
       ): Promise<Truffle.TransactionResponse<AllEvents>>;
       call(
-        postId: string,
+        eventId: string,
         title: string,
         description: string,
-        target: string,
-        expectedAmount: number | BN | string,
+        governorId: number | BN | string,
+        targetAddress: string,
+        donation: number | BN | string,
         txDetails?: Truffle.TransactionDetails
       ): Promise<void>;
       sendTransaction(
-        postId: string,
+        eventId: string,
         title: string,
         description: string,
-        target: string,
-        expectedAmount: number | BN | string,
+        governorId: number | BN | string,
+        targetAddress: string,
+        donation: number | BN | string,
         txDetails?: Truffle.TransactionDetails
       ): Promise<string>;
       estimateGas(
-        postId: string,
+        eventId: string,
         title: string,
         description: string,
-        target: string,
-        expectedAmount: number | BN | string,
+        governorId: number | BN | string,
+        targetAddress: string,
+        donation: number | BN | string,
         txDetails?: Truffle.TransactionDetails
       ): Promise<number>;
     };
@@ -372,10 +381,11 @@ export interface ProposalElectionInstance extends Truffle.ContractInstance {
         id: BN;
         title: string;
         description: string;
-        postId: string;
-        expectedAmount: BN;
+        eventId: string;
+        governerId: BN;
+        donation: BN;
         owner: string;
-        target: string;
+        targetAddress: string;
         votes: BN;
         passed: boolean;
         transfered: boolean;
@@ -426,25 +436,25 @@ export interface ProposalElectionInstance extends Truffle.ContractInstance {
 
     forceApplyAsCandidate: {
       (
-        postId: string,
+        eventId: string,
         title: string,
         description: string,
         txDetails?: Truffle.TransactionDetails
       ): Promise<Truffle.TransactionResponse<AllEvents>>;
       call(
-        postId: string,
+        eventId: string,
         title: string,
         description: string,
         txDetails?: Truffle.TransactionDetails
       ): Promise<void>;
       sendTransaction(
-        postId: string,
+        eventId: string,
         title: string,
         description: string,
         txDetails?: Truffle.TransactionDetails
       ): Promise<string>;
       estimateGas(
-        postId: string,
+        eventId: string,
         title: string,
         description: string,
         txDetails?: Truffle.TransactionDetails

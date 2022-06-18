@@ -1,6 +1,6 @@
 <template>
-  <OverlayLoader :key="election.electionEndsAt" :loading="loading">
-    <div class="px-4 lg:px-28 bg-base bg-cover bg-fixed min-h-screen py-32">
+  <OverlayLoader :loading="loading">
+    <div :key="election.electionEndsAt" class="px-4 lg:px-28 bg-base bg-cover bg-fixed min-h-screen py-32">
       <div v-if="isApplying" class="w-full pb-28 ">
         <h2>Apply for governor</h2>
         <div class="bg-black shadow-box rounded-lg p-9 mt-10">
@@ -162,11 +162,12 @@ export default {
       this.loading = false
     },
     async vote (voteForId) {
+      this.loading = true
       if (!this.user) {
+        this.loading = false
         this.$rxt.toast('Unsuccessful!', 'Please login before voting')
         return
       }
-      this.loading = true
 
       // TODO repalce force vote with simple vote
       const transaction = await Moralis.executeFunction({
