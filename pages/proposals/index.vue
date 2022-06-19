@@ -18,7 +18,7 @@
             <!-- <MyInput v-model="form.targetAddress" placeholder="Address" class="w-full lg:w-2/3  mx-auto" has-errors :validation-errors="errors['address']" /> -->
             <MyInput
               v-model="form.donationInEth"
-              placeholder="Donation in ETH"
+              placeholder="Donation in MATIC"
               type="number"
               class="w-full lg:w-2/3  mx-auto"
               has-errors
@@ -39,6 +39,9 @@
         <h2>
           Current governors
         </h2>
+        <button class="btn-primary cursor-default pointer-events-none" @click.prevent>
+          Total vault balance: {{ vaultBalance }} MATIC
+        </button>
       </div>
       <div v-if="governors.length" class="grid grid-cols-1 text-sm font-bold gap-y-28  lg:grid-cols-3  lg:gap-x-16 lg:gap-y-28  lg:w-fit lg:mx-auto my-24">
         <div v-for="(governer,index) in governors" :key="index" class="text-center bg-black shadow-box rounded-lg p-9">
@@ -86,7 +89,7 @@
 
               <div class="flex">
                 <p class="text-sm text-primary my-auto pr-4">
-                  Donation: <span class="text-white"> {{ proposal.donationInEth }} ETH </span>
+                  Donation: <span class="text-white"> {{ proposal.donationInEth }} MATIC </span>
                 </p>
               </div>
             </div>
@@ -120,6 +123,7 @@ export default {
     return {
       loading: false,
       isOffering: false,
+      vaultBalance: 1,
       form: {
         eventId: '',
         title: '',
@@ -167,8 +171,19 @@ export default {
     this.loadGovernors()
     this.explorePublications()
     this.loadProposals()
+    this.getVaultBalance()
   },
   methods: {
+    async getVaultBalance () {
+      const covalent = Moralis.Plugins.covalent
+      const result = await covalent.getTokenBalancesForAddress({
+        chainId: this.$config.networkId,
+        address: ProposalElection.networks[this.$config.networkId].address,
+        quoteCurrency: 'MATIC'
+      })
+      console.log('MATIC Balance for Vault: ', result)
+      this.vaultBalance = Moralis.Units.FromWei(result.data.items[0].balance)
+    },
     getProposalCategoryId (proposal) {
       const event = this.events.find(e => e.id === proposal.eventId)
       if (!event) {
@@ -239,7 +254,7 @@ export default {
       this.loading = false
     },
     isGovernor () {
-      return !!this.governors.find(g => g.owner.toUpperCase() === this.address.toUpperCase())
+      return this.address && !!this.governors.find(g => g.owner.toUpperCase() === this.address.toUpperCase())
     },
     async createProposal () {
       this.loading = true

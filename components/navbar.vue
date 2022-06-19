@@ -39,7 +39,7 @@
             </button>
           </li>
           <li class="min-w-[70px] text-center mt-[8px] md:mt-[16px] text-4xl lg:text-base hover:text-primary">
-            <button v-if="!accessToken" class="btn-primary" @click="showDonateModal">
+            <button class="btn-primary" @click="showDonateModal = true">
               Donate
             </button>
           </li>
@@ -51,11 +51,11 @@
       <h2>Thank you for considering donation</h2>
       <MyInput
         v-model="form.donation"
-        placeholder="Name"
+        placeholder="Place your donation here"
         type="number"
         class="w-full lg:w-2/3 mx-auto mt-10 "
         has-errors
-        :validation-errors="errors['handle']"
+        :validation-errors="errors['donation']"
       />
       <div class="text-center mt-10 flex flex-row gap-3 mx-auto w-auto">
         <button class="btn-primary" @click="donateToVault()">
