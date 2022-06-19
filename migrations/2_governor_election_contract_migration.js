@@ -10,5 +10,5 @@ const GovernorElection = artifacts.require("GovernorElection");
 // };
 
 module.exports = function (deployer) {
-  deployer.deploy(GovernorElection);
+  deployer.deploy(GovernorElection, {overwrite: false});
 };

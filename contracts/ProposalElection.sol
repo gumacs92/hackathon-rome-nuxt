@@ -146,7 +146,7 @@ contract ProposalElection is Ownable {
         uint activeProposalNum = 0;
         for(uint i = 0; i < proposalNum; i++) {
             //return only active proposals
-            if(proposals[i].lastsFor >= block.timestamp && proposals[i].passed == false) {
+            if(proposals[i].lastsFor >= block.timestamp && proposals[i].transfered == false) {
                activeProposalNum++;
             }
         }
@@ -154,11 +154,12 @@ contract ProposalElection is Ownable {
         //create an array of active proposals
         Proposal[] memory activeProposals = new Proposal[](activeProposalNum);
 
+        uint j = 0;
         //copy the active proposals to the array
         for(uint i = 0; i < proposalNum; i++) {
             //return only active proposals
-            if(proposals[i].lastsFor >= block.timestamp && proposals[i].passed == false) {
-                activeProposals[i] = proposals[i];
+            if(proposals[i].lastsFor >= block.timestamp && proposals[i].transfered == false) {
+                activeProposals[j++] = proposals[i];
             }
         }
 

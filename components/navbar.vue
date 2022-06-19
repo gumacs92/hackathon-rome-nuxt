@@ -59,7 +59,7 @@
       />
       <div class="text-center mt-10 flex flex-row gap-3 mx-auto w-auto">
         <button class="btn-primary" @click="donateToVault()">
-          Donate profile
+          Donate
         </button>
         <button class="btn-primary" @click="showDonateModal = false">
           Cancel

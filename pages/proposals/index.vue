@@ -71,7 +71,7 @@
             <div class="text-center bg-black shadow-box rounded-xl h-16 w-16 p-4 mb-3">
               <img :src="getImage(getProposalCategoryId(proposal), 'icon')" class="rounded-xl  ">
             </div>
-            <h3 class="text-primary text-4xl">
+            <h3 class="text-primary text-4xl" @click="forcePassProposal(proposal)">
               {{ proposal.title }}
             </h3>
             <p class="text-lg mt-5 text-white ">
@@ -82,8 +82,14 @@
             </p>
             <div class="flex flex-row justify-between">
               <div class="my-auto">
-                <button class="btn-primary">
+                <button v-if="!proposal.passed && !userAlreadyVoted(proposal)" class="btn-primary" @click="voteForProposal(proposal)">
                   Vote
+                </button>
+                <button v-else-if="!proposal.passed && userAlreadyVoted(proposal)" class="btn-primary pointer-events-none cursor-default" @click.prevent>
+                  Voted
+                </button>
+                <button v-else class="btn-primary" @click="approveProposal(proposal)">
+                  Approve&amp;Send
                 </button>
               </div>
 
@@ -236,6 +242,72 @@ export default {
 
       this.loading = false
     },
+    async forcePassProposal (proposal) {
+      this.loading = true
+
+      const tx = await Moralis.executeFunction({
+        abi: ProposalElection.abi,
+        contractAddress: ProposalElection.networks[this.$config.networkId].address,
+        functionName: 'passProposal',
+        params: {
+          proposalId: proposal.id
+        }
+      })
+
+      await tx.wait()
+      await this.loadProposals()
+      this.loading = false
+    },
+    async voteForProposal (proposal) {
+      this.loading = true
+
+      if (!this.isGovernor()) {
+        this.loading = false
+        this.$rxt.toast('Error', 'You are not a governor, you cannot vote on proposal')
+        return
+      }
+
+      try {
+        const tx = await Moralis.executeFunction({
+          abi: ProposalElection.abi,
+          contractAddress: ProposalElection.networks[this.$config.networkId].address,
+          functionName: 'vote',
+          params: {
+            proposalId: proposal.id
+          }
+        })
+
+        await tx.wait()
+        await this.loadProposals()
+      } catch (e) {
+        console.error(e)
+        this.$rxt.toast('Error', 'You have already voted on this proposal')
+      }
+      this.loading = false
+    },
+    async approveProposal (proposal) {
+      this.loading = true
+
+      if (!this.isGovernor()) {
+        this.loading = false
+        this.$rxt.toast('Error', 'You are not a governor, you cannot approve a proposal')
+        return
+      }
+
+      const tx = await Moralis.executeFunction({
+        abi: ProposalElection.abi,
+        contractAddress: ProposalElection.networks[this.$config.networkId].address,
+        functionName: 'approveProposal',
+        params: {
+          proposalId: proposal.id
+        }
+      })
+
+      await tx.wait()
+      await this.loadProposals()
+      this.loading = false
+      this.isOffering = false
+    },
     async loadGovernors () {
       this.loading = true
 
@@ -256,6 +328,9 @@ export default {
     isGovernor () {
       return this.address && !!this.governors.find(g => g.owner.toUpperCase() === this.address.toUpperCase())
     },
+    userAlreadyVoted (proposal) {
+      return this.address && !!proposal.alreadyVoted.find(v => v.toUpperCase() === this.address.toUpperCase())
+    },
     async createProposal () {
       this.loading = true
 
@@ -263,10 +338,7 @@ export default {
         const governor = this.governors.find(g => g.owner.toUpperCase() === this.address.toUpperCase())
 
         if (!governor) {
-          this.$rxt.notify({
-            type: 'Error',
-            message: 'You are not a governor, you cannot create proposal'
-          })
+          this.$rxt.toast('Error', 'You are not a governor, you cannot create proposal')
           return
         }
 
