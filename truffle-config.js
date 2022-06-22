@@ -1,6 +1,5 @@
+require('dotenv').config()
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-const fs = require('fs');
-const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 module.exports = {
   networks: {
@@ -11,9 +10,9 @@ module.exports = {
     },
     matic_mumbai: {
       // provider: () => new HDWalletProvider(mnemonic, `https://polygon-mumbai.g.alchemy.com/v2/hcFrhMzqBw5qNFrG25xGAXRU4sMciI2W`),
-      provider: () => new HDWalletProvider(mnemonic, `https://polygon-mumbai.g.alchemy.com/v2/zjLFzNhk8AVv-KWTuRPzK_UTJjk9zqJi`),
+      provider: () => new HDWalletProvider(process.env.ADDRESS_SECRET_MNEMONIC, `https://polygon-mumbai.g.alchemy.com/v2/zjLFzNhk8AVv-KWTuRPzK_UTJjk9zqJi`),
       network_id: 80001,
-      from: '0x4498Bdd0f655Bd1f21cd89840Ac73feb6b547bb6',
+      from: process.env.ADDRESS_DEPLOY_FROM,
       //confirmations: 2,
       gas:4500000,
       gasPrice:10000000000,

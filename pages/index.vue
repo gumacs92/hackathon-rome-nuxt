@@ -9,9 +9,9 @@
               Governed by the community
             </h1>
             <p class=" text-base my-11">
-              The Governor is managed by a global <br> community of ROME token holders and delegates.
+              The Governor is managed by the  <br> community of people who would like to do something for our planet.
             </p>
-            <button class="btn-primary">
+            <button class="btn-primary" @click="$router.push('/events')">
               Join us
             </button>
           </div>
@@ -88,19 +88,19 @@ export default {
     return {
       project: [
         {
-          title: 'Create event',
+          title: 'Create events',
           icon: '/img/icons/create.svg',
-          description: 'The Governor is managed by a global community of ROME token holders and delegates.'
+          description: 'As registered user create or join local or global events for bettering tommorow. Hold events which catches the eyes of the elected governors.'
         },
         {
-          title: 'Vote for governer',
+          title: 'Govern the system',
           icon: '/img/icons/vote.svg',
-          description: 'The Governor is managed by a global community of ROME token holders and delegates.'
+          description: 'Apply for government or just delegate your ideas with your vote to the party who wants the same. Elections are programmed into the smart contract, it cannot be rigged.'
         },
         {
-          title: 'Donation',
+          title: 'Proposals and donation',
           icon: '/img/icons/donation.svg',
-          description: 'The Governor is managed by a global community of ROME token holders and delegates.'
+          description: 'Donate and let the elected government decide who should be eligible for the common\'s vault. Everyone can be a decisionmaker just apply for governor, or vote for one, to make your dream come true.'
         }
       ],
       team: [
