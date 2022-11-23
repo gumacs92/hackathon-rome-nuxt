@@ -198,7 +198,12 @@ export default {
       return event.metadata.content.categoryId
     },
     getCategoryNameById (id) {
-      return this.categories.find(c => c.id === id).name
+      const found = this.categories.find(c => c.id === id)
+      if (found) {
+        return found.name
+      } else {
+        return 'None'
+      }
     },
     getSelectedEvent (id) {
       return this.events.find(e => e.id === id)
